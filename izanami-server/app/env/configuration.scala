@@ -17,6 +17,7 @@ object InMemory       extends DbType
 object Elastic        extends DbType
 object Mongo          extends DbType
 object InMemoryWithDb extends DbType
+object PostgreSQL     extends DbType
 
 object DbType {
   def fromString(s: String) = s match {
@@ -27,6 +28,8 @@ object DbType {
     case "Elastic"        => Elastic
     case "Mongo"          => Mongo
     case "InMemoryWithDb" => InMemoryWithDb
+    case "PostgreSQL"     => PostgreSQL
+    case "Postgres"       => PostgreSQL
   }
 }
 
@@ -167,11 +170,18 @@ case class DbConfig(
     kafka: Option[KafkaConfig],
     elastic: Option[ElasticConfig],
     mongo: Option[MongoConfig],
-    inMemoryWithDb: Option[InMemoryWithDbConfig]
+    inMemoryWithDb: Option[InMemoryWithDbConfig],
+    postgres: Option[PostgreSQLConfig]
 )
 
 case class InMemoryWithDbConfig(db: DbType, pollingInterval: Option[FiniteDuration] = None)
-
+case class PostgreSQLConfig(
+    host: String,
+    port: Int,
+    poolSize: Int,
+    password: Option[String],
+    database: Option[Int] = None
+)
 sealed trait RedisConfig
 case class Master(
     host: String,
